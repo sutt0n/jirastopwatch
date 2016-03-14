@@ -15,6 +15,7 @@ limitations under the License.
 **************************************************************************/
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -84,6 +85,8 @@ namespace StopWatch
             cbJira.SelectedIndexChanged += cbJira_SelectedIndexChanged;
             cbJira.DisplayMember = "Key";
             cbJira.ValueMember = "Key";
+            //cbJira.DropDownHeight = 180;
+            cbJiraDropDownHeight = 0;
 
             ignoreTextChange = false;
 
@@ -191,6 +194,7 @@ namespace StopWatch
             // 
             // cbJira
             // 
+            this.cbJira.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
             this.cbJira.DropDownWidth = 500;
             this.cbJira.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F);
             this.cbJira.Location = new System.Drawing.Point(0, 2);
@@ -317,9 +321,26 @@ namespace StopWatch
         #region private eventhandlers
         void cbJira_MeasureItem(object sender, MeasureItemEventArgs e)
         {
+            if (e.Index == 0)
+                cbJiraDropDownHeight = 0;
+
+            Size canvas = new Size(400, 500);
             Font font = new Font(cbJira.Font.FontFamily, cbJira.Font.Size * 0.8f, cbJira.Font.Style);
-            Size size = TextRenderer.MeasureText(e.Graphics, "FOO", font);
+
+            CBIssueItem item = (CBIssueItem)cbJira.Items[e.Index];
+
+            Size size = TextRenderer.MeasureText(e.Graphics, item.Summary, font, canvas, TextFormatFlags.WordBreak);
             e.ItemHeight = size.Height;
+
+            Debug.WriteLine(string.Format("{0}: {1}", e.Index, size.Height));
+
+            cbJiraDropDownHeight += size.Height;
+
+            if (e.Index == cbJira.Items.Count - 1)
+            {
+                Debug.WriteLine(string.Format("Comboheight: {0}", cbJiraDropDownHeight));
+                //cbJira.DropDownHeight = Math.Min(cbJiraDropDownHeight, 100);
+            }
         }
 
 
@@ -347,7 +368,8 @@ namespace StopWatch
 
             // Draw a line to isolate the columns 
             using (Pen p = new Pen(Color.Black))
-                e.Graphics.DrawLine(p, r1.Right, 0, r1.Right, r1.Bottom);
+                //e.Graphics.DrawLine(p, r1.Right, 0, r1.Right, r1.Bottom);
+                e.Graphics.DrawLine(p, r1.Right, 0, r1.Right, cbJira.DropDownHeight);
 
             // Draw the text on the second column
             using (SolidBrush sb = new SolidBrush(e.ForeColor))
@@ -455,6 +477,8 @@ namespace StopWatch
         private IRestClientFactory restClientFactory;
 
         private bool ignoreTextChange;
+
+        private int cbJiraDropDownHeight;
         #endregion
 
 

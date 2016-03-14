@@ -89,10 +89,10 @@
             // 
             this.cbFilters.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.cbFilters.FormattingEnabled = true;
-            this.cbFilters.Location = new System.Drawing.Point(251, 92);
+            this.cbFilters.Location = new System.Drawing.Point(218, 92);
             this.cbFilters.Margin = new System.Windows.Forms.Padding(2);
             this.cbFilters.Name = "cbFilters";
-            this.cbFilters.Size = new System.Drawing.Size(151, 24);
+            this.cbFilters.Size = new System.Drawing.Size(184, 24);
             this.cbFilters.TabIndex = 4;
             this.cbFilters.SelectedIndexChanged += new System.EventHandler(this.cbFilters_SelectedIndexChanged);
             // 
